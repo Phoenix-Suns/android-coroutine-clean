@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Nghia MVI Coroutine</string>
+    <string name="close">Close</string>
+    <string name="error">Error!</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="unknown_error">Unknow Error</string>
+    <string name="you_need_login_again">You need login again</string>
+    <string name="search_repo">Search Repo</string>
+</resources>
