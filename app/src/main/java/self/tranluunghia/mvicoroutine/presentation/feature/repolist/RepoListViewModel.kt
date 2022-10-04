@@ -1,7 +1,5 @@
 package self.tranluunghia.mvicoroutine.presentation.feature.repolist
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import self.tranluunghia.mvicoroutine.core.basemvi.BaseMVIViewModel
 import self.tranluunghia.mvicoroutine.core.entity.DataState
@@ -14,15 +12,15 @@ import javax.inject.Inject
 class RepoListViewModel @Inject constructor(
     private val getUserDetailUseCase: GetUserDetailUseCase,
     private val getRepoListUseCase: GetRepoListUseCase
-) : BaseMVIViewModel<RepoListContract.ListIntent, RepoListContract.ListState>() {
+) : BaseMVIViewModel<RepoListContract.Event, RepoListContract.State, RepoListContract.Effect>() {
 
     private var searchKey: String = ""
     private var repoListPaging: Paging = Paging()
 
-    override fun handleIntents(viewIntent: RepoListContract.ListIntent) {
-        when (viewIntent) {
-            is RepoListContract.ListIntent.GetList -> {
-                getListRepo(viewIntent.searchKey)
+    override fun handleEvents(viewEvent: RepoListContract.Event) {
+        when (viewEvent) {
+            is RepoListContract.Event.GetList -> {
+                getListRepo(viewEvent.searchKey)
             }
         }
     }
@@ -39,7 +37,7 @@ class RepoListViewModel @Inject constructor(
 
                 when (dataState.status) {
                     DataState.Status.SUCCESS -> {
-                        callbackState(RepoListContract.ListState.ShowRepoList(dataState.data!!))
+                        callbackState(RepoListContract.State.ShowRepo(dataState.data!!))
                     }
                     DataState.Status.ERROR -> {
 
@@ -58,7 +56,7 @@ class RepoListViewModel @Inject constructor(
                 .collect { dataState ->
                     when (dataState.status) {
                         DataState.Status.SUCCESS -> {
-                            callbackState(RepoListContract.ListState.ShowUserInfo(dataState.data!!))
+                            callbackState(RepoListContract.State.ShowUserInfo(dataState.data!!))
                         }
                         DataState.Status.ERROR -> {
 
@@ -70,4 +68,6 @@ class RepoListViewModel @Inject constructor(
                 }
         }
     }
+
+    override fun createInitialState() = RepoListContract.State.Idle
 }

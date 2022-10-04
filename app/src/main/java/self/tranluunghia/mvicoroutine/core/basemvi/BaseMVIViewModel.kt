@@ -5,14 +5,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
 import self.tranluunghia.mvicoroutine.core.entity.ErrorInfo
 import self.tranluunghia.mvicoroutine.core.entity.ErrorType
 import self.tranluunghia.mvicoroutine.core.helper.SingleLiveEvent
 
 @OptIn(ExperimentalCoroutinesApi::class)
-abstract class BaseMVIViewModel<INTENT: BaseMVIContract.BaseIntent, STATE: BaseMVIContract.BaseState> : ViewModel() {
+abstract class BaseMVIViewModel<
+        EVENT : BaseMVIContract.BaseEvent,
+        STATE : BaseMVIContract.BaseState,
+        EFFECT : BaseMVIContract.BaseEffect> : ViewModel() {
+
     private val tag by lazy { this::class.java.name }
 
     var viewModelJob = Job()
@@ -21,8 +25,24 @@ abstract class BaseMVIViewModel<INTENT: BaseMVIContract.BaseIntent, STATE: BaseM
     val ioScope = CoroutineScope(ioContext)
     val uiScope = CoroutineScope(uiContext)
 
-    private val uiEvent = MutableSharedFlow<INTENT>()
-    val callbackState = MutableSharedFlow<STATE>()
+
+    // Create Initial State of View
+    private val initialState : STATE by lazy { createInitialState() }
+    abstract fun createInitialState() : STATE
+
+    // Get Current State
+    val currentState: STATE
+        get() = uiState.value
+
+    private val _uiState : MutableStateFlow<STATE> = MutableStateFlow(initialState)
+    val uiState = _uiState.asStateFlow()
+
+    private val _event : MutableSharedFlow<EVENT> = MutableSharedFlow()
+    val event = _event.asSharedFlow()
+
+    private val _effect : Channel<EFFECT> = Channel()
+    val effect = _effect.receiveAsFlow()
+
 
     // Common error
     val loadingEvent = MutableLiveData<Boolean>()
@@ -33,23 +53,46 @@ abstract class BaseMVIViewModel<INTENT: BaseMVIContract.BaseIntent, STATE: BaseM
 
     init {
         viewModelScope.launch {
-            uiEvent.collect { viewIntent ->
-                handleIntents(viewIntent)
+            _event.collect { viewEvent ->
+                handleEvents(viewEvent)
             }
         }
     }
 
-    abstract fun handleIntents(viewIntent: INTENT)
+    abstract fun handleEvents(viewEvent: EVENT)
 
-    fun sendIntent(intent: INTENT) {
+    fun setEvent(event: EVENT) {
         viewModelScope.launch {
-            uiEvent.emit(intent)
+            _event.emit(event)
         }
+    }
+
+    /**
+     * Set new Ui State
+     */
+    protected fun setState(reduce: STATE.() -> STATE) {
+        val newState = currentState.reduce()
+        _uiState.value = newState
     }
 
     protected fun callbackState(state: STATE) {
         viewModelScope.launch {
-            callbackState.emit(state)
+            _uiState.emit(state)
+        }
+    }
+
+
+    /**
+     * Set new Effect
+     */
+    protected fun setEffect(builder: () -> EFFECT) {
+        val effectValue = builder()
+        viewModelScope.launch { _effect.send(effectValue) }
+    }
+
+    protected fun callbackEffect(effect: EFFECT) {
+        viewModelScope.launch {
+            _effect.send(effect)
         }
     }
 

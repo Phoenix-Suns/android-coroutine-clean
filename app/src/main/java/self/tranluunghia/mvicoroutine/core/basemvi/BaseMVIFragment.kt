@@ -12,8 +12,22 @@ import self.tranluunghia.mvicoroutine.R
 import self.tranluunghia.mvicoroutine.core.helper.DialogHelper
 import self.tranluunghia.mvicoroutine.core.helper.extention.observe
 
+/**
+Pros
+State objects are immutable so it is thread safe.
+All actions like state, event, effect is in same file so it is easy to understand what happens in the screen at one look.
+Maintaining state is easy.
+Since data flow is unidirectional, tracking is easy.
+
+Cons
+It causes a lot of boilerplate.
+High memory management because we have to create lots of object.
+Sometimes, we have many views and complicated logics, in this kind of situation State become huge and we might want split this State into smaller ones with extra StateFlows instead of just using one.
+
+https://github.com/orbit-mvi/orbit-mvi
+ */
 //abstract class BaseMVIFragment<VIEW_MODEL: BaseMVIViewModel<*, STATE>, DATA_BINDING: ViewBinding, STATE: BaseMVIContract.BaseState>: Fragment() {
-abstract class BaseMVIFragment<VIEW_MODEL : BaseMVIViewModel<*, *>, DATA_BINDING : ViewBinding> :
+abstract class BaseMVIFragment<VIEW_MODEL : BaseMVIViewModel<*, *, *>, DATA_BINDING : ViewBinding> :
     Fragment() {
     protected lateinit var binding: DATA_BINDING
     lateinit var viewModel: VIEW_MODEL

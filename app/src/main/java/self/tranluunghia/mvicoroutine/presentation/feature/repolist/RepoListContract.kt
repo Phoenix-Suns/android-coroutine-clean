@@ -5,13 +5,18 @@ import self.tranluunghia.mvicoroutine.domain.model.GithubRepo
 import self.tranluunghia.mvicoroutine.domain.model.GithubUser
 
 sealed class RepoListContract {
-    sealed class ListIntent: BaseMVIContract.BaseIntent {
-        class GetList(val searchKey: String) : ListIntent()
+    sealed class Event: BaseMVIContract.BaseEvent {
+        data class GetList(val searchKey: String) : Event()
     }
 
-    sealed class ListState: BaseMVIContract.BaseState {
-        class ShowUserInfo(val userInfo: GithubUser) : ListState()
-        class ShowRepoList(val repoList: List<GithubRepo>) : ListState()
+    sealed class State: BaseMVIContract.BaseState {
+        object Idle : State()
 
+        data class ShowUserInfo(val userInfo: GithubUser) : State()
+        data class ShowRepo(val repoList: List<GithubRepo>) : State()
+    }
+
+    sealed class Effect: BaseMVIContract.BaseEffect {
+        object ShowToast : Effect()
     }
 }

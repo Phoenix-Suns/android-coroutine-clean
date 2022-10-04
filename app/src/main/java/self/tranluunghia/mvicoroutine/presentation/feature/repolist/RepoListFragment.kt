@@ -1,7 +1,6 @@
 package self.tranluunghia.mvicoroutine.presentation.feature.repolist
 
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancelChildren
@@ -39,7 +38,7 @@ class RepoListFragment : BaseMVIFragment<RepoListViewModel, FragmentRepoListBind
 
         binding.buttonSearch.singleClick {
             val searchKey = binding.editTextSearchKey.text.toString().trim()
-            viewModel.sendIntent(RepoListContract.ListIntent.GetList(searchKey))
+            viewModel.setEvent(RepoListContract.Event.GetList(searchKey))
         }
 
         binding.buttonDestroyView.singleClick {
@@ -52,19 +51,22 @@ class RepoListFragment : BaseMVIFragment<RepoListViewModel, FragmentRepoListBind
         super.subscribeUI()
 
         lifecycleScope.launchWhenCreated {
-            viewModel.callbackState.collect {
+            viewModel.uiState.collect {
                 handleStates(it)
             }
         }
     }
 
-    private fun handleStates(state: RepoListContract.ListState) {
+    private fun handleStates(state: RepoListContract.State) {
         when (state) {
-            is RepoListContract.ListState.ShowUserInfo -> {
+            is RepoListContract.State.ShowUserInfo -> {
                 logE(state.userInfo.name)
             }
-            is RepoListContract.ListState.ShowRepoList -> {
+            is RepoListContract.State.ShowRepo -> {
                 repoListAdapter.updateItems(state.repoList)
+            }
+            is RepoListContract.State.Idle -> {
+
             }
         }
     }

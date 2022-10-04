@@ -46,7 +46,6 @@ android {
 
 dependencies {
     def livedata_version = "2.5.1"
-    def navigation_version = "2.5.2"
 
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
@@ -59,14 +58,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$livedata_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$livedata_version"
     implementation "androidx.lifecycle:lifecycle-common-java8:$livedata_version"
-
-    // Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
-    // Feature module Support
-    implementation "androidx.navigation:navigation-dynamic-features-fragment:$navigation_version"
-    // Jetpack Compose Integration
-    //implementation "androidx.navigation:navigation-compose:$navigation_version"
 
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
