@@ -54,7 +54,7 @@ fun <Response, Result> repositoryExecutor(
     context: Context,
     retrofit: Retrofit,
     apiCall: (suspend () -> Response)? = null,
-    transform: (suspend (Response) -> Result),
+    transform: (suspend (Response) -> Result)? = null,
     emitCache: (suspend () -> Result?)? = null,
 ): Flow<DataState<Result>> = flow {
     if (!NetworkHelper.isInternetConnected(context))

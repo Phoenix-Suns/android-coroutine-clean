@@ -45,7 +45,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    internal fun provideOkhttpClient(cache: Cache, application: Application): OkHttpClient {
+    internal fun provideOkhttpClient(cache: Cache): OkHttpClient {
         val httpClient = OkHttpClient.Builder().apply {
             cache(cache)
             addNetworkInterceptor(headerInterceptor())          // Add request header

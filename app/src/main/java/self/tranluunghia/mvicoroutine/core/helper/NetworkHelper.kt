@@ -37,18 +37,32 @@ object NetworkHelper {
     @JvmStatic
     @RequiresPermission(android.Manifest.permission.ACCESS_NETWORK_STATE)
     fun getConnectivityStatus(context: Context): ConnectionType  {
-        val manager =
+        val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = manager.activeNetworkInfo
 
-        if (networkInfo != null) {
-            when (networkInfo.type) {
-                ConnectivityManager.TYPE_WIFI -> return ConnectionType.TYPE_WIFI
-                ConnectivityManager.TYPE_MOBILE -> return ConnectionType.TYPE_MOBILE_DATA
-                ConnectivityManager.TYPE_ETHERNET -> return ConnectionType.TYPE_ETHERNET
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            val nw = connectivityManager.activeNetwork
+            val actNw = connectivityManager.getNetworkCapabilities(nw)
+
+            return when {
+                actNw?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true -> ConnectionType.TYPE_WIFI
+                actNw?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) == true -> ConnectionType.TYPE_MOBILE_DATA
+                actNw?.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) == true -> ConnectionType.TYPE_ETHERNET
+                else -> ConnectionType.NOT_CONNECTED
             }
+        } else {
+            val networkInfo = connectivityManager.activeNetworkInfo
+
+            if (networkInfo != null) {
+                when (networkInfo.type) {
+                    ConnectivityManager.TYPE_WIFI -> return ConnectionType.TYPE_WIFI
+                    ConnectivityManager.TYPE_MOBILE -> return ConnectionType.TYPE_MOBILE_DATA
+                    ConnectivityManager.TYPE_ETHERNET -> return ConnectionType.TYPE_ETHERNET
+                }
+            }
+            return ConnectionType.NOT_CONNECTED
         }
-        return ConnectionType.NOT_CONNECTED
     }
 
     @JvmStatic
@@ -88,62 +102,6 @@ object NetworkHelper {
             httpUrl?.disconnect()
         }
         return result
-    }
-
-    @JvmStatic
-    @RequiresPermission(android.Manifest.permission.ACCESS_NETWORK_STATE)
-    fun isWiFiConnected(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            val network = connectivityManager.activeNetwork
-            val capabilities = connectivityManager.getNetworkCapabilities(network)
-            capabilities != null && capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
-        } else {
-            connectivityManager.activeNetworkInfo?.type == ConnectivityManager.TYPE_WIFI
-        }
-    }
-
-    @JvmStatic
-    @RequiresPermission(android.Manifest.permission.ACCESS_NETWORK_STATE)
-    fun is3GConnected(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            val network = connectivityManager.activeNetwork
-            val capabilities = connectivityManager.getNetworkCapabilities(network)
-            capabilities != null && capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
-        } else {
-            connectivityManager.activeNetworkInfo?.type == ConnectivityManager.TYPE_MOBILE
-        }
-    }
-
-    @JvmStatic
-    @RequiresPermission(android.Manifest.permission.ACCESS_NETWORK_STATE)
-    fun is2G(context: Context): Boolean {
-        val connectivityManager = context
-            .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetInfo = connectivityManager.activeNetworkInfo
-        return activeNetInfo != null && (activeNetInfo.subtype == TelephonyManager.NETWORK_TYPE_EDGE
-                || activeNetInfo.subtype == TelephonyManager.NETWORK_TYPE_GPRS || activeNetInfo
-            .subtype == TelephonyManager.NETWORK_TYPE_CDMA)
-    }
-
-
-    /**
-     * is wifi on
-     */
-    @SuppressLint("MissingPermission")
-    @JvmStatic
-    @RequiresPermission(android.Manifest.permission.ACCESS_NETWORK_STATE)
-    fun isWifiEnabled(context: Context): Boolean {
-        val mgrConn = context
-            .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val mgrTel = context
-            .getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        return mgrConn.activeNetworkInfo != null
-                && mgrConn.activeNetworkInfo?.state == NetworkInfo.State.CONNECTED
-                || mgrTel.networkType == TelephonyManager.NETWORK_TYPE_UMTS
     }
 
     /** check response
