@@ -6,4 +6,5 @@
     <string name="unknown_error">Unknow Error</string>
     <string name="you_need_login_again">You need login again</string>
     <string name="search_repo">Search Repo</string>
+    <string name="title_activity_todo_compose">TodoComposeActivity</string>
 </resources>

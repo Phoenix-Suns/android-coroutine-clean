@@ -1,5 +1,6 @@
 package self.tranluunghia.mvicoroutine.presentation.feature.randomnumber
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
@@ -10,6 +11,8 @@ import self.tranluunghia.mvicoroutine.core.helper.extention.gone
 import self.tranluunghia.mvicoroutine.core.helper.extention.visible
 import self.tranluunghia.mvicoroutine.databinding.FragmentRandomNumberBinding
 import self.tranluunghia.mvicoroutine.presentation.feature.repolist.RepoListFragment
+import self.tranluunghia.mvicoroutine.presentation.featurecompose.todo.TodoComposeActivity
+import self.tranluunghia.mvicoroutine.presentation.featurecompose.user.UserActivity
 
 // MVI Architecture with Kotlin Flows and Channels
 @AndroidEntryPoint
@@ -49,6 +52,16 @@ class RandomNumberFragment : BaseMVIFragment<RandomNumberViewModel, FragmentRand
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView, repoListFragment).
                 addToBackStack(repoListFragment::class.simpleName).commit()
+        }
+
+        binding.btGotoTodoCompose.setOnClickListener {
+            val intent = Intent(context, TodoComposeActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.btGotoUserCompose.setOnClickListener {
+            val intent = Intent(context, UserActivity::class.java)
+            startActivity(intent)
         }
     }
 
