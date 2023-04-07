@@ -16,11 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NghiaMVICoroutine"
         tools:targetApi="31">
-        <activity
-            android:name=".presentation.featurecompose.todo.TodoComposeActivity"
-            android:exported="false"
-            android:label="@string/title_activity_todo_compose"
-            android:theme="@style/Theme.NghiaMVICoroutine" />
 
         <activity
             android:name=".presentation.featurecompose.user.UserActivity"
