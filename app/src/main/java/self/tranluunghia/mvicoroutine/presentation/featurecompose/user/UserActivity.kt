@@ -14,7 +14,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import self.tranluunghia.mvicoroutine.presentation.featurecompose.todo.ui.theme.NghiaMVICoroutineTheme
 
 // Single Activity per app
 @AndroidEntryPoint
@@ -23,14 +22,12 @@ class UserActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            NghiaMVICoroutineTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    UserApp()
-                }
+            // A surface container using the 'background' color from the theme
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colors.background
+            ) {
+                UserApp()
             }
         }
     }
@@ -39,9 +36,7 @@ class UserActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    NghiaMVICoroutineTheme {
-        UserApp()
-    }
+    UserApp()
 }
 
 @Composable
@@ -53,12 +48,12 @@ fun UserApp() {
         navController = navController,
         startDestination = "user_list",
     ) {
-        composable( route = "user_list") {
+        composable(route = "user_list") {
             // inject View Model
             val vm: HomeScreenViewModel = hiltViewModel()
             UserListPage(navController = navController, vm = vm)
         }
-        composable( route = "user_detail/{user_id}") { backStackEntry ->
+        composable(route = "user_detail/{user_id}") { backStackEntry ->
             // inject View Model
             val vm: UserDetailScreenViewModel = hiltViewModel()
             val userId = (backStackEntry.arguments?.getString("user_id", "") ?: "").toLong()
