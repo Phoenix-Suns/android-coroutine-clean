@@ -59,16 +59,6 @@
             app:layout_constraintTop_toBottomOf="@+id/btShowToast" />
 
         <Button
-            android:id="@+id/btGotoTodoCompose"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:text="Todo Compose"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btGotoRepoList" />
-
-        <Button
             android:id="@+id/btGotoUserCompose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -76,7 +66,7 @@
             android:layout_marginTop="16dp"
             android:text="User Compose"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btGotoTodoCompose" />
+            app:layout_constraintTop_toBottomOf="@+id/btGotoRepoList" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
