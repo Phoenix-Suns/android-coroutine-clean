@@ -2,6 +2,8 @@
 
 ![alt text](demo1.png "Title")
 
+## DI Flow diagram
+
 ```mermaid
 
 flowchart TD
@@ -30,7 +32,7 @@ flowchart TD
     C -- Phụ thuộc vào Interface --> D
     F -- Lấy phụ thuộc bằng @Inject --> E
     J -- Kết nối Interface với Implementation --> E
-    D -- Kết nối Interface với Implementatio --> J
+    D -- Kết nối Interface với Implementation --> J
 
     style Z fill:#a2d5a2,stroke:#28a745,stroke-width:2px
     style B fill:#cde4ff
@@ -47,4 +49,49 @@ flowchart TD
     linkStyle 4 stroke-dasharray: 5 5,fill:none
     linkStyle 5 stroke:#dc3545,stroke-width:2px,fill:none
 
+```
+
+```kotlin
+// UI Layer request getRepoList
+      @Composable
+      fun RepoListScreen(
+            viewModel: RepoListViewModel = hiltViewModel() // Yêu cầu ViewModel từ Hilt
+      ) {
+            // ... viewModel.getRepoList()
+      }
+
+// Hilt ViewModel for UI use
+    @HiltViewModel
+    class RepoListViewModel @Inject constructor(
+        private val getRepoListUseCase: GetRepoListUseCase
+    ) : ViewModel() { /* ... */ }
+
+// Hilt provide UseCase (Domain Layer) for ViewModel using
+    class GetRepoListUseCase @Inject constructor(
+        private val repository: GithubUserRepository // Phụ thuộc vào interface
+    ) { /* ... */ }
+    
+// Hilt Module to connect Interface with Implementation
+    @Module
+    @InstallIn(SingletonComponent::class)
+    abstract class RepositoryModule {
+        @Binds
+        abstract fun bindGithubUserRepository(
+            impl: GithubUserRepositoryImpl
+        ): GithubUserRepository // Kết nối interface và implementation
+    }
+
+    interface GithubUserRepository {
+      fun getUserDetail(username: String): Flow<DataState<GithubUser>>
+      fun getRepoList(keyWork: String, page: Int, perPage: Int): Flow<DataState<List<GithubRepo>>>
+    }
+    
+    class GithubUserRepositoryImpl @Inject constructor(
+        private val context: Context,
+        private val retrofit: Retrofit,
+        private val githubWS: GithubWS,
+        private val githubUserResponseMapper: GithubUserResponseMapper,
+        private val githubRepoResponseMapper: GithubRepoResponseMapper
+    ) : GithubUserRepository { /* ... */ }
+    
 ```
