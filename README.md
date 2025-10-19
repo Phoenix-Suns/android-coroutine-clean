@@ -95,3 +95,37 @@ flowchart TD
     ) : GithubUserRepository { /* ... */ }
     
 ```
+
+```mermaid dagger MVVM
+flowchart TD
+  subgraph Modules
+    AM["@Module ActivityModule"] 
+    APIM["@Module ApiModule"] 
+    DBM["@Module DbModule"] 
+    VM["@Module ViewModelModule"] 
+    TM["@Module TestModule"]
+  end
+
+  AC["@Component AppComponent"] --> AM
+  AC --> APIM
+  AC --> DBM
+  AC --> VM
+  AC --> TM
+
+  subgraph Injection
+    UI[Activity] -- "@Inject" --> VMF[ViewModelFactory]
+    VMF -- "@Inject" --> VM2[ViewModel]
+    VM2 -- "@Inject" --> MR[MovieRepository]
+    MR -- "@Inject" --> API[MovieApiService]
+    MR -- "@Inject" --> DB[AppDatabase]
+  end
+
+  AM -- "@Provides" --> UI
+  APIM -- "@Provides" --> API
+  DBM -- "@Provides" --> DB
+  VM -- "@Provides" --> VM2
+  TM -- "@Provides" --> VMF
+
+  AC -- "@Singleton" --> API
+  AC -- "@Singleton" --> DB
+```
