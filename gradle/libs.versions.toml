@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.3"
+agp = "8.10.1"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -9,7 +9,7 @@ lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
 composeBom = "2024.11.00"
 
-androidLibrary = "8.7.3"
+androidLibrary = "8.10.1"
 kaptVersion = "2.1.0"
 livedata = "2.8.7"
 compose-ui = "1.7.5"
