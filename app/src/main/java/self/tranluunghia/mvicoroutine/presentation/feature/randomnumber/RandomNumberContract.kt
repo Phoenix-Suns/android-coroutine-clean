@@ -1,8 +1,6 @@
 package self.tranluunghia.mvicoroutine.presentation.feature.randomnumber
 
 import self.tranluunghia.mvicoroutine.core.basemvi.BaseMVIContract
-import self.tranluunghia.mvicoroutine.domain.model.GithubRepo
-import self.tranluunghia.mvicoroutine.domain.model.GithubUser
 
 sealed class RandomNumberContract {
     sealed class Event: BaseMVIContract.BaseEvent {

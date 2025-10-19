@@ -3,8 +3,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import self.tranluunghia.mvicoroutine.core.basemvi.BaseMVIViewModel
-import self.tranluunghia.mvicoroutine.core.entity.DataState
-import self.tranluunghia.mvicoroutine.domain.usecase.GetUserDetailUseCase
 import javax.inject.Inject
 
 @HiltViewModel
