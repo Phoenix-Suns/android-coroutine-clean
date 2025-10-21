@@ -1,4 +1,4 @@
-package self.tranluunghia.mvicoroutine.data.api.service
+package self.tranluunghia.mvicoroutine.data.source.remote
 
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -7,7 +7,7 @@ import self.tranluunghia.mvicoroutine.data.model.GithubList
 import self.tranluunghia.mvicoroutine.data.model.response.GithubRepoResponse
 import self.tranluunghia.mvicoroutine.data.model.response.GithubUserResponse
 
-interface GithubWS {
+interface GithubApiService {
     @GET("users/{username}")
     suspend fun getGitHubUserDetail(@Path("username") userName: String) : GithubUserResponse
 

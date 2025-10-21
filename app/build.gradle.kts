@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 
     id("org.jetbrains.kotlin.kapt")
+//    id("kotlin-kapt")
     alias(libs.plugins.dagger.hilt.android)
 }
 
@@ -88,6 +89,10 @@ dependencies {
     implementation(libs.retrofit.adapter.rxjava2)
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.okhttp)
+
+    // Room
+    implementation("androidx.room:room-runtime:2.8.2")
+    kapt("androidx.room:room-compiler:2.8.2")
 
     // Hilt
     implementation(libs.hilt.android)

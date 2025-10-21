@@ -5,7 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
-import self.tranluunghia.mvicoroutine.data.api.service.GithubWS
+import self.tranluunghia.mvicoroutine.data.source.remote.GithubApiService
 import javax.inject.Singleton
 
 @Module
@@ -14,7 +14,7 @@ class ApiModule {
 
     @Singleton
     @Provides
-    internal fun provideGithubService(retrofit: Retrofit): GithubWS {
-        return retrofit.create(GithubWS::class.java)
+    internal fun provideGithubService(retrofit: Retrofit): GithubApiService {
+        return retrofit.create(GithubApiService::class.java)
     }
 }
